@@ -1,6 +1,6 @@
-import * as empty from 'empty-folder';
+import empty from 'empty-folder';
 import { EventEmitter } from 'events';
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 import mkdirp from 'mkdirp-promise';
 import moment from 'moment';
 import * as path from 'path';
@@ -42,7 +42,7 @@ export class Kiwi extends EventEmitter {
     retries: 3
   };
   protected inited: boolean = false;
-  protected started: boolean = true;
+  protected started: boolean = false;
   protected currentJob: IJob | null = null;
 
   protected currentPath: string;
@@ -61,6 +61,8 @@ export class Kiwi extends EventEmitter {
       this[dir + 'Path'] = folderPath;
       this.paths.push(folderPath);
     }
+
+    this.addListener('job:finished', this.onJobFinished.bind(this));
   }
 
   public async init(): Promise<void> {
@@ -89,6 +91,12 @@ export class Kiwi extends EventEmitter {
     }
   }
 
+  public async idle(): Promise<void> {
+    return new Promise(resolve => {
+      this.once('queue:idle', resolve);
+    });
+  }
+
   public async add(data: any): Promise<void> {
     const filename = await this.getUniqueFilename();
     await fs.writeJSON(filename, data, {
@@ -98,6 +106,16 @@ export class Kiwi extends EventEmitter {
       this.runNextJob();
     }
   }
+
+  public async isEmpty() {
+    return (await this.countIdleJobs()) === 0;
+  }
+
+  public async countIdleJobs(): Promise<number> {
+    const files = await this.getFilesInIdleDirectory();
+    return files && files.length || 0;
+  }
+
 
   protected async getUniqueFilename(): Promise<string> {
     let exist: boolean;
@@ -153,6 +171,12 @@ export class Kiwi extends EventEmitter {
     this.emit('job:finished', job);
   }
 
+  protected async onJobFinished(): Promise<void> {
+    if (await this.isEmpty()) {
+      this.emit('queue:idle');
+    }
+  }
+
   protected async getNextJob(): Promise<IJob | false> {
     const filepath = await this.getNextJobFilePath();
     if (filepath) {
@@ -167,17 +191,26 @@ export class Kiwi extends EventEmitter {
   }
 
   protected async getNextJobFilePath(): Promise<string | false> {
-    let files = await fs.promises.readdir(this.idlePath);
-    if (files.length === 0) { return false; }
-    files = files.filter(x => x.endsWith('.json')).sort();
-    return files && files.length > 0 && files[0];
+    const files = await this.getFilesInIdleDirectory();
+    return files && files.length > 0 && path.join(this.idlePath, files[0]);
+  }
+
+  protected async getFilesInIdleDirectory() {
+    let files = await fs.readdir(this.idlePath);
+    if (files.length === 0) {
+      return false;
+    }
+    return files.filter(x => x.endsWith('.json')).sort();
   }
 
   protected empty(folderPath: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      empty(folderPath, false, error => {
-        if (error) { reject(error); }
-        else { resolve(); }
+      empty(folderPath, false, ({ error/*,failed,removed*/ }) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
       });
     });
   }
