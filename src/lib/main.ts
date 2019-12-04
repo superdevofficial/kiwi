@@ -12,6 +12,7 @@ const debug = require('debug')('kiwi');
 /**
  * autostart: run queue just after constructor call. (default: false)
  * directory: path of directory where kiwi will create folders
+ * delayBetweenJobs: min delay before run next job (setTimeout, default: 0)
  * deleteJobOnSuccess: delete job file when success (default: true)
  * restore: reload queue from file system on start up. Clear queue if false (default: true).
  * retries: max fail retries. 0 = infinite retry. False = no retry. (default: 3)
@@ -20,6 +21,7 @@ const debug = require('debug')('kiwi');
 export interface IOption {
   autostart: boolean;
   directory: string;
+  delayBetweenJobs: number;
   deleteJobOnSuccess: boolean;
   restore: boolean;
   retries: boolean | number;
@@ -42,16 +44,18 @@ const DIR_NAMES: ReadonlyArray<any> = ['current', 'idle', 'success', 'fail'];
 
 export class Kiwi extends EventEmitter {
   protected static fileId = 0;
-  protected static mutex = new Mutex();
+  protected static runJobMutex = new Mutex();
+  protected static getJobMutex = new Mutex();
   protected options: IOption = {
     autostart: false,
+    delayBetweenJobs: 0,
     deleteJobOnSuccess: true,
     directory: './.queue',
     jsonSpacing: 2,
     restore: true,
     retries: 3
   };
-  protected inited: boolean = false;
+  public inited: Promise<void>;
   protected started: boolean = false;
   protected currentJob: IJob | null = null;
 
@@ -78,15 +82,21 @@ export class Kiwi extends EventEmitter {
       this.start();
   }
 
-  public async init(): Promise<void> {
+  public init(): Promise<void> {
     if (!this.inited) {
-      for (const dir of this.paths) {
-        await mkdirp(dir);
-      }
-      if (!this.options.restore)
-        await this.clear();
-      this.inited = true;
+      this.inited = this._init();
     }
+    return this.inited;
+  }
+
+  protected async _init(): Promise<void> {
+    debug('start init');
+    for (const dir of this.paths) {
+      await mkdirp(dir);
+    }
+    if (!this.options.restore)
+      await this._clear();
+    debug('end init');
   }
 
   public async start(): Promise<void> {
@@ -101,6 +111,10 @@ export class Kiwi extends EventEmitter {
 
   public async clear(): Promise<void> {
     await this.init();
+    return this._clear();
+  }
+
+  protected async _clear(): Promise<void> {
     for (const dir of this.paths) {
       debug('remove folder ' + dir);
       await this.empty(dir);
@@ -153,27 +167,33 @@ export class Kiwi extends EventEmitter {
   }
 
   protected async runNextJob(): Promise<void> {
+    let releaseGetJob = await Kiwi.getJobMutex.acquire();
     if (!this.currentJob && this.started) {
-      const release = await Kiwi.mutex.acquire();
+      debug('try to run next job');
+      const releaseRunJob = await Kiwi.runJobMutex.acquire();
       try {
         const job = await this.getNextJob();
         debug('Get next job', job);
         if (job) {
+          this.currentJob = job;
+          releaseGetJob();
+          releaseGetJob = null;
           await this.runJob(job);
+          this.currentJob = null;
         }
       } catch (e) {
         debug('Error while running job', e);
       } finally {
-        release();
+        releaseRunJob();
       }
+    } else {
+      debug('Run next job invoked but job alreay running');
     }
+    if (releaseGetJob)
+      releaseGetJob();
   }
 
   protected async runJob(job: IJob): Promise<void> {
-    if (this.currentJob) {
-      throw new Error('Cannot run job, a job already running');
-    }
-    this.currentJob = job;
     debug('run job ', job.filename);
 
     const newFilepath = path.join(this.currentPath, job.filename);
@@ -195,7 +215,6 @@ export class Kiwi extends EventEmitter {
 
     await fs.remove(job.filepath);
 
-    this.currentJob = null;
     debug('dispatch job:finished', job.filename);
     this.emit('job:finished', job);
   }
@@ -203,6 +222,10 @@ export class Kiwi extends EventEmitter {
   protected async onJobFinished(): Promise<void> {
     if (await this.isEmpty()) {
       this.emit('queue:idle');
+    } else {
+      setTimeout(() => {
+        this.runNextJob();
+      }, this.options.delayBetweenJobs);
     }
   }
 

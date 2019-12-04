@@ -4,6 +4,7 @@ import { Kiwi } from './main';
 
 test.serial('should run one task', async t => {
   let counter = 0;
+
   const queue = new Kiwi(job => {
     counter++;
     t.is(counter, 1);
@@ -11,6 +12,7 @@ test.serial('should run one task', async t => {
     t.truthy(job.filename);
     t.pass();
   });
+
   await queue.clear();
   await queue.add('foo');
   queue.start();
@@ -19,8 +21,10 @@ test.serial('should run one task', async t => {
 });
 
 test.serial('should keep task order', async t => {
-  const max = 4;
+  const max = 100;
   let counter = 0;
+  t.timeout(max * 100);
+
   const queue = new Kiwi(job => {
     t.is(job.data, counter);
     if (job.data === max)
@@ -28,6 +32,7 @@ test.serial('should keep task order', async t => {
     else
       counter++;
   });
+
   await queue.clear();
   for (let i = 0; i <= max; i++) {
     queue.add(i);
@@ -40,6 +45,7 @@ test.serial('should keep task order', async t => {
 test.serial('should auto start', async t => {
   const max = 4;
   let counter = 0;
+
   const queue = new Kiwi(job => {
     t.is(job.data, counter);
     if (job.data === max)
@@ -47,9 +53,43 @@ test.serial('should auto start', async t => {
     else
       counter++;
   }, { autostart: true, restore: false });
+
+  await queue.inited;
   for (let i = 0; i <= max; i++) {
     queue.add(i);
   }
   await queue.idle();
   t.is(counter, max);
 });
+
+test.serial('should support long async task', async t => {
+  const max = 10;
+  const time = 50;
+  let counter = 0;
+  t.timeout(time * max + 2000);
+
+  const queue = new Kiwi(job => {
+    t.is(job.data, counter);
+    if (job.data === max)
+      t.pass();
+    else
+      return awaitTime(() => counter++, time / 2);
+    return null;
+  }, { autostart: true, restore: false });
+
+  await queue.inited;
+  for (let i = 0; i <= max; i++) {
+    queue.add(i);
+  }
+  await queue.idle();
+  t.is(counter, max);
+});
+
+async function awaitTime(callback: Function, time: number) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      callback();
+      resolve();
+    }, time);
+  });
+}
