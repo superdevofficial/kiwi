@@ -13,7 +13,8 @@ const debug = require('debug')('kiwi');
  * autostart: run queue just after constructor call. (default: false)
  * directory: path of directory where kiwi will create folders
  * delayBetweenJobs: min delay before run next job (setTimeout, default: 0)
- * deleteJobOnSuccess: delete job file when success (default: true)
+ * deleteJobOnFail: delete job file when fail, otherwise move to fail folder (default: true)
+ * deleteJobOnSuccess: delete job file when success, otherwise move to success folder (default: true)
  * restore: reload queue from file system on start up. Clear queue if false (default: true).
  * retries: max fail retries. 0 = infinite retry. False = no retry. (default: 3)
  * jsonSpacing: stringify indent. (default: 2)
@@ -22,6 +23,7 @@ export interface IOption {
   autostart: boolean;
   directory: string;
   delayBetweenJobs: number;
+  deleteJobOnFail: boolean;
   deleteJobOnSuccess: boolean;
   restore: boolean;
   retries: boolean | number;
@@ -51,6 +53,7 @@ export class Kiwi extends EventEmitter {
   protected options: IOption = {
     autostart: false,
     delayBetweenJobs: 0,
+    deleteJobOnFail: true,
     deleteJobOnSuccess: true,
     directory: './.queue',
     jsonSpacing: 2,
@@ -218,7 +221,7 @@ export class Kiwi extends EventEmitter {
       }
     } while (!job.success && (this.options.retries < 0 || job.tryCount <= this.options.retries));
 
-    await fs.remove(job.filepath);
+    await this.cleanJobFile(job);
 
     debug('dispatch job events', job.filename);
     if (job.success)
@@ -226,6 +229,18 @@ export class Kiwi extends EventEmitter {
     else
       this.emit('job:fail', job);
     this.emit('job:finished', job);
+  }
+
+  protected async cleanJobFile(job: IJob): Promise<void> {
+    let destPath = path.join(job.success ? this.successPath : this.failPath, job.filename);
+    let remove = job.success ? this.options.deleteJobOnSuccess : this.options.deleteJobOnFail;
+    if (remove) {
+      await fs.remove(job.filepath);
+      job.filepath = null;
+    } else {
+      await fs.move(job.filepath, destPath);
+      job.filepath = destPath;
+    }
   }
 
   protected async onJobFinished(): Promise<void> {

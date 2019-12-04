@@ -106,7 +106,7 @@ test.serial('should retry if failed', async t => {
     counter++;
     if (job.data === 1)
       throw 'fail';
-  }, { autostart: true, restore: false, retries: 3 });
+  }, { autostart: true, restore: false, retries: 3, deleteJobOnFail: false, deleteJobOnSuccess: false });
 
   await queue.inited;
   for (let i = 1; i <= max; i++) {
@@ -114,9 +114,15 @@ test.serial('should retry if failed', async t => {
   }
   await queue.idle();
   t.is(counter, 5);
+  t.is(await countFileInFolder('.queue/fail'), 1);
+  t.is(await countFileInFolder('.queue/success'), 1);
   t.pass();
 });
 
+async function countFileInFolder(dir: string) {
+  let files = await fs.readdir(dir);
+  return files && files.length || 0;
+}
 
 async function awaitTime(callback: Function, time: number) {
   return new Promise((resolve) => {
