@@ -5,18 +5,23 @@ import mkdirp from 'mkdirp-promise';
 import moment from 'moment';
 import * as path from 'path';
 import { Mutex } from 'async-mutex';
+import numeral from 'numeral';
 // tslint:disable-next-line
 const debug = require('debug')('kiwi');
 
 /**
+ * autostart: run queue just after constructor call. (default: false)
  * directory: path of directory where kiwi will create folders
  * deleteJobOnSuccess: delete job file when success (default: true)
+ * restore: reload queue from file system on start up. Clear queue if false (default: true).
  * retries: max fail retries. 0 = infinite retry. False = no retry. (default: 3)
  * jsonSpacing: stringify indent. (default: 2)
  */
 export interface IOption {
+  autostart: boolean;
   directory: string;
   deleteJobOnSuccess: boolean;
+  restore: boolean;
   retries: boolean | number;
   jsonSpacing: number;
 }
@@ -39,9 +44,11 @@ export class Kiwi extends EventEmitter {
   protected static fileId = 0;
   protected static mutex = new Mutex();
   protected options: IOption = {
+    autostart: false,
     deleteJobOnSuccess: true,
     directory: './.queue',
     jsonSpacing: 2,
+    restore: true,
     retries: 3
   };
   protected inited: boolean = false;
@@ -66,6 +73,9 @@ export class Kiwi extends EventEmitter {
     }
 
     this.addListener('job:finished', this.onJobFinished.bind(this));
+
+    if (this.options.autostart)
+      this.start();
   }
 
   public async init(): Promise<void> {
@@ -73,6 +83,8 @@ export class Kiwi extends EventEmitter {
       for (const dir of this.paths) {
         await mkdirp(dir);
       }
+      if (!this.options.restore)
+        await this.clear();
       this.inited = true;
     }
   }
@@ -129,7 +141,7 @@ export class Kiwi extends EventEmitter {
       Kiwi.fileId++;
       filename = path.join(
         this.idlePath,
-        moment().format('YYYY-MM-DD-HH-mm-ss-') + Kiwi.fileId + '.json'
+        moment().format('YYYY-MM-DD-HH-mm-ss-') + numeral(Kiwi.fileId).format('00000000000000000000') + '.json'
       );
       exist = await fs.pathExists(filename);
     } while (exist && i < 100);

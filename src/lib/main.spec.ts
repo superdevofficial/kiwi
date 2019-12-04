@@ -18,7 +18,7 @@ test.serial('should run one task', async t => {
   t.true(await queue.isEmpty());
 });
 
-test.serial.only('should keep task order', async t => {
+test.serial('should keep task order', async t => {
   const max = 4;
   let counter = 0;
   const queue = new Kiwi(job => {
@@ -33,6 +33,23 @@ test.serial.only('should keep task order', async t => {
     queue.add(i);
   }
   queue.start();
+  await queue.idle();
+  t.is(counter, max);
+});
+
+test.serial('should auto start', async t => {
+  const max = 4;
+  let counter = 0;
+  const queue = new Kiwi(job => {
+    t.is(job.data, counter);
+    if (job.data === max)
+      t.pass();
+    else
+      counter++;
+  }, { autostart: true, restore: false });
+  for (let i = 0; i <= max; i++) {
+    queue.add(i);
+  }
   await queue.idle();
   t.is(counter, max);
 });
