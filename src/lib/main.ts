@@ -94,7 +94,9 @@ export class Kiwi extends EventEmitter {
     for (const dir of this.paths) {
       await mkdirp(dir);
     }
-    if (!this.options.restore)
+    if (this.options.restore)
+      await this.restoreCurrentFileIntoIdleDirectory();
+    else
       await this._clear();
     debug('end init');
   }
@@ -247,12 +249,33 @@ export class Kiwi extends EventEmitter {
     return files && files.length > 0 && path.join(this.idlePath, files[0]);
   }
 
+  protected async getFilesInCurrentDirectory() {
+    return this.getFilesInDirectory(this.currentPath);
+  }
+
   protected async getFilesInIdleDirectory() {
-    let files = await fs.readdir(this.idlePath);
+    return this.getFilesInDirectory(this.idlePath);
+  }
+
+  protected async getFilesInDirectory(dir: string) {
+    let files = await fs.readdir(dir);
     if (files.length === 0) {
       return false;
     }
     return files.filter(x => x.endsWith('.json')).sort();
+  }
+
+  protected async restoreCurrentFileIntoIdleDirectory() {
+    let files = await this.getFilesInCurrentDirectory();
+    if (files && files.length > 0) {
+      for (let file of files) {
+        await fs.move(
+          path.join(this.currentPath, file),
+          path.join(this.idlePath, file),
+          { overwrite: false }
+        );
+      }
+    }
   }
 
   protected empty(folderPath: string): Promise<any> {

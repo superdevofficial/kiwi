@@ -1,5 +1,6 @@
 // tslint:disable:no-expression-statement
 import test from 'ava';
+import fs from 'fs-extra';
 import { Kiwi } from './main';
 
 test.serial('should run one task', async t => {
@@ -84,6 +85,19 @@ test.serial('should support long async task', async t => {
   await queue.idle();
   t.is(counter, max);
 });
+
+test.serial('should restore previous task', async t => {
+  await fs.ensureDir('.queue/current');
+  await fs.writeJson('.queue/current/a-test-0001.json', { foo: 'bar' });
+
+  const queue = new Kiwi(job => {
+    t.deepEqual(job.data, { foo: 'bar' });
+    t.pass();
+  }, { autostart: true });
+
+  await queue.idle();
+});
+
 
 async function awaitTime(callback: Function, time: number) {
   return new Promise((resolve) => {
