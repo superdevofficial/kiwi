@@ -4,6 +4,7 @@ import fs from 'fs-extra';
 import mkdirp from 'mkdirp-promise';
 import moment from 'moment';
 import * as path from 'path';
+import { Mutex } from 'async-mutex';
 // tslint:disable-next-line
 const debug = require('debug')('kiwi');
 
@@ -35,6 +36,8 @@ export type WorkerFunction = (job: IJob) => any | Promise<any>;
 const DIR_NAMES: ReadonlyArray<any> = ['current', 'idle', 'success', 'fail'];
 
 export class Kiwi extends EventEmitter {
+  protected static fileId = 0;
+  protected static mutex = new Mutex();
   protected options: IOption = {
     deleteJobOnSuccess: true,
     directory: './.queue',
@@ -87,6 +90,7 @@ export class Kiwi extends EventEmitter {
   public async clear(): Promise<void> {
     await this.init();
     for (const dir of this.paths) {
+      debug('remove folder ' + dir);
       await this.empty(dir);
     }
   }
@@ -116,30 +120,39 @@ export class Kiwi extends EventEmitter {
     return files && files.length || 0;
   }
 
-
   protected async getUniqueFilename(): Promise<string> {
     let exist: boolean;
     let filename: string = '';
     let i = 0;
     do {
+      i++;
+      Kiwi.fileId++;
       filename = path.join(
         this.idlePath,
-        moment().format('YYYY-MM-DD-HH-mm-ss-') + i + '.json'
+        moment().format('YYYY-MM-DD-HH-mm-ss-') + Kiwi.fileId + '.json'
       );
-      i++;
       exist = await fs.pathExists(filename);
     } while (exist && i < 100);
     if (exist) {
       throw new Error('Unable to find unique file name !');
     }
+    debug('get unique filename : ' + filename);
     return filename;
   }
 
   protected async runNextJob(): Promise<void> {
     if (!this.currentJob && this.started) {
-      const job = await this.getNextJob();
-      if (job) {
-        await this.runJob(job);
+      const release = await Kiwi.mutex.acquire();
+      try {
+        const job = await this.getNextJob();
+        debug('Get next job', job);
+        if (job) {
+          await this.runJob(job);
+        }
+      } catch (e) {
+        debug('Error while running job', e);
+      } finally {
+        release();
       }
     }
   }
@@ -148,10 +161,12 @@ export class Kiwi extends EventEmitter {
     if (this.currentJob) {
       throw new Error('Cannot run job, a job already running');
     }
+    this.currentJob = job;
+    debug('run job ', job.filename);
+
     const newFilepath = path.join(this.currentPath, job.filename);
     await fs.move(job.filepath, newFilepath);
     job.filepath = newFilepath;
-    this.currentJob = job;
 
     job.data = await fs.readJSON(job.filepath);
     job.tryCount = 0;
@@ -159,6 +174,7 @@ export class Kiwi extends EventEmitter {
     do {
       try {
         jobResult = await this.worker(job);
+        debug('job success', job.filename, jobResult);
       } catch (e) {
         debug('job failed', e);
         jobResult = false;
@@ -168,6 +184,7 @@ export class Kiwi extends EventEmitter {
     await fs.remove(job.filepath);
 
     this.currentJob = null;
+    debug('dispatch job:finished', job.filename);
     this.emit('job:finished', job);
   }
 

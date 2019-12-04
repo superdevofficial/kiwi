@@ -50,6 +50,7 @@
     "node": ">=8.9"
   },
   "dependencies": {
+    "async-mutex": "^0.1.4",
     "debug": "^4.1.1",
     "empty-folder": "^2.0.3",
     "fs-extra": "^8.1.0",

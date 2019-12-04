@@ -2,7 +2,7 @@
 import test from 'ava';
 import { Kiwi } from './main';
 
-test('should run one task', async t => {
+test.serial('should run one task', async t => {
   let counter = 0;
   const queue = new Kiwi(job => {
     counter++;
@@ -16,4 +16,23 @@ test('should run one task', async t => {
   queue.start();
   await queue.idle();
   t.true(await queue.isEmpty());
+});
+
+test.serial.only('should keep task order', async t => {
+  const max = 4;
+  let counter = 0;
+  const queue = new Kiwi(job => {
+    t.is(job.data, counter);
+    if (job.data === max)
+      t.pass();
+    else
+      counter++;
+  });
+  await queue.clear();
+  for (let i = 0; i <= max; i++) {
+    queue.add(i);
+  }
+  queue.start();
+  await queue.idle();
+  t.is(counter, max);
 });
