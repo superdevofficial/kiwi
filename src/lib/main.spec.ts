@@ -23,7 +23,7 @@ test.serial('should run one task', async t => {
 
 test.serial('should keep task order', async t => {
   const max = 100;
-  let counter = 0;
+  let counter = 1;
   t.timeout(max * 100);
 
   const queue = new Kiwi(job => {
@@ -35,7 +35,7 @@ test.serial('should keep task order', async t => {
   });
 
   await queue.clear();
-  for (let i = 0; i <= max; i++) {
+  for (let i = 1; i < max; i++) {
     queue.add(i);
   }
   queue.start();
@@ -45,7 +45,7 @@ test.serial('should keep task order', async t => {
 
 test.serial('should auto start', async t => {
   const max = 4;
-  let counter = 0;
+  let counter = 1;
 
   const queue = new Kiwi(job => {
     t.is(job.data, counter);
@@ -56,7 +56,7 @@ test.serial('should auto start', async t => {
   }, { autostart: true, restore: false });
 
   await queue.inited;
-  for (let i = 0; i <= max; i++) {
+  for (let i = 1; i < max; i++) {
     queue.add(i);
   }
   await queue.idle();
@@ -66,7 +66,7 @@ test.serial('should auto start', async t => {
 test.serial('should support long async task', async t => {
   const max = 10;
   const time = 50;
-  let counter = 0;
+  let counter = 1;
   t.timeout(time * max + 2000);
 
   const queue = new Kiwi(job => {
@@ -79,7 +79,7 @@ test.serial('should support long async task', async t => {
   }, { autostart: true, restore: false });
 
   await queue.inited;
-  for (let i = 0; i <= max; i++) {
+  for (let i = 1; i <= max; i++) {
     queue.add(i);
   }
   await queue.idle();
@@ -96,6 +96,25 @@ test.serial('should restore previous task', async t => {
   }, { autostart: true });
 
   await queue.idle();
+});
+
+test.serial('should retry if failed', async t => {
+  const max = 2;
+  let counter = 0;
+
+  const queue = new Kiwi(job => {
+    counter++;
+    if (job.data === 1)
+      throw 'fail';
+  }, { autostart: true, restore: false, retries: 3 });
+
+  await queue.inited;
+  for (let i = 1; i <= max; i++) {
+    queue.add(i);
+  }
+  await queue.idle();
+  t.is(counter, 5);
+  t.pass();
 });
 
 

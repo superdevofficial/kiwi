@@ -33,6 +33,8 @@ export interface IJob {
   filepath: string;
   data: any;
   tryCount: number;
+  success?: boolean;
+  result?: any;
 }
 
 /**
@@ -204,20 +206,25 @@ export class Kiwi extends EventEmitter {
 
     job.data = await fs.readJSON(job.filepath);
     job.tryCount = 0;
-    let jobResult: any;
     do {
       try {
-        jobResult = await this.worker(job);
-        debug('job success', job.filename, jobResult);
+        job.result = await this.worker(job);
+        job.success = true;
+        debug('job success', job.filename, job.result);
       } catch (e) {
         debug('job failed', e);
-        jobResult = false;
+        job.success = false;
+        job.tryCount++;
       }
-    } while (jobResult === false);
+    } while (!job.success && (this.options.retries < 0 || job.tryCount <= this.options.retries));
 
     await fs.remove(job.filepath);
 
-    debug('dispatch job:finished', job.filename);
+    debug('dispatch job events', job.filename);
+    if (job.success)
+      this.emit('job:success', job);
+    else
+      this.emit('job:fail', job);
     this.emit('job:finished', job);
   }
 
