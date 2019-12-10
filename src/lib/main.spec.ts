@@ -141,7 +141,7 @@ test.serial('should retry if failed', async t => {
   t.pass();
 });
 
-test.serial.only('should support custom logger', async t => {
+test.serial('should support custom logger', async t => {
   const queue = new Kiwi(
     () => {
       /** do nothing */
