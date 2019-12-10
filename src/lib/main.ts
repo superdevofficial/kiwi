@@ -24,6 +24,7 @@ export interface IOption {
   /** delete job file when success, otherwise move to success folder (default: true) */
   deleteJobOnSuccess: boolean;
   /** reload queue from file system on start up. Clear queue if false (default: true) */
+  logger?: (message: string, ...data: any) => void;
   restore: boolean;
   /** max fail retries. 0 = infinite retry. False = no retry. (default: 3) */
   retries: boolean | number;
@@ -48,22 +49,22 @@ export type WorkerFunction = (job: IJob) => any | Promise<any>;
 const DIR_NAMES: ReadonlyArray<any> = ['current', 'idle', 'success', 'fail'];
 
 /**
-* Example :
-* @example
-* ```typescript
-* let counter = 0;
-*
-* const queue = new Kiwi(job => {
-*   counter++;
-* });
-*
-* await queue.clear(); //clean previous jobs
-* await queue.add('foo'); //add job with 'foo' as data
-* queue.start();
-* await queue.idle(); //await queue is empty
-* console.log(await queue.isEmpty()); //check is empty
-* ```
-*/
+ * Example :
+ * @example
+ * ```typescript
+ * let counter = 0;
+ *
+ * const queue = new Kiwi(job => {
+ *   counter++;
+ * });
+ *
+ * await queue.clear(); //clean previous jobs
+ * await queue.add('foo'); //add job with 'foo' as data
+ * queue.start();
+ * await queue.idle(); //await queue is empty
+ * console.log(await queue.isEmpty()); //check is empty
+ * ```
+ */
 export class Kiwi extends EventEmitter {
   protected static fileId = 0;
   protected static runJobMutex = new Mutex();
@@ -87,6 +88,7 @@ export class Kiwi extends EventEmitter {
   protected successPath: string;
   protected failPath: string;
   protected paths: string[];
+  protected logger: any;
 
   /**
    * @param worker Async function invoked by kiwi on each job. Should throw an exception if job failed.
@@ -95,6 +97,8 @@ export class Kiwi extends EventEmitter {
   constructor(protected worker: WorkerFunction, options?: Partial<IOption>) {
     super();
     Object.assign(this.options, options);
+    this.logger =
+      typeof this.options.logger === 'function' ? this.options.logger : debug;
 
     this.paths = [];
     for (const dir of DIR_NAMES) {
@@ -158,7 +162,7 @@ export class Kiwi extends EventEmitter {
   }
 
   protected async _init(): Promise<void> {
-    debug('start init');
+    this.logger('start init');
     for (const dir of this.paths) {
       await mkdirp(dir);
     }
@@ -167,12 +171,12 @@ export class Kiwi extends EventEmitter {
     } else {
       await this._clear();
     }
-    debug('end init');
+    this.logger('end init');
   }
 
   protected async _clear(): Promise<void> {
     for (const dir of this.paths) {
-      debug('remove folder ' + dir);
+      this.logger('remove folder ' + dir);
       await this.empty(dir);
     }
   }
@@ -187,26 +191,26 @@ export class Kiwi extends EventEmitter {
       filename = path.join(
         this.idlePath,
         moment().format('YYYY-MM-DD-HH-mm-ss-') +
-        numeral(Kiwi.fileId).format('00000000000000000000') +
-        '.json'
+          numeral(Kiwi.fileId).format('00000000000000000000') +
+          '.json'
       );
       exist = await fs.pathExists(filename);
     } while (exist && i < 100);
     if (exist) {
       throw new Error('Unable to find unique file name !');
     }
-    debug('get unique filename : ' + filename);
+    this.logger('get unique filename : ' + filename);
     return filename;
   }
 
   protected async runNextJob(): Promise<void> {
     let releaseGetJob = await Kiwi.getJobMutex.acquire();
     if (!this.currentJob && this.started) {
-      debug('try to run next job');
+      this.logger('try to run next job');
       const releaseRunJob = await Kiwi.runJobMutex.acquire();
       try {
         const job = await this.getNextJob();
-        debug('Get next job', job);
+        this.logger('Get next job', job);
         if (job) {
           this.currentJob = job;
           releaseGetJob();
@@ -215,12 +219,12 @@ export class Kiwi extends EventEmitter {
           this.currentJob = null;
         }
       } catch (e) {
-        debug('Error while running job', e);
+        this.logger('Error while running job', e);
       } finally {
         releaseRunJob();
       }
     } else {
-      debug('Run next job invoked but job alreay running');
+      this.logger('Run next job invoked but job alreay running');
     }
     if (releaseGetJob) {
       releaseGetJob();
@@ -228,7 +232,7 @@ export class Kiwi extends EventEmitter {
   }
 
   protected async runJob(job: IJob): Promise<void> {
-    debug('run job ', job.filename);
+    this.logger('run job ', job.filename);
 
     const newFilepath = path.join(this.currentPath, job.filename);
     await fs.move(job.filepath, newFilepath);
@@ -240,9 +244,9 @@ export class Kiwi extends EventEmitter {
       try {
         job.result = await this.worker(job);
         job.success = true;
-        debug('job success', job.filename, job.result);
+        this.logger('job success', job.filename, job.result);
       } catch (e) {
-        debug('job failed', e);
+        this.logger('job failed', e);
         job.success = false;
         job.tryCount++;
       }
@@ -253,7 +257,7 @@ export class Kiwi extends EventEmitter {
 
     await this.cleanJobFile(job);
 
-    debug('dispatch job events', job.filename);
+    this.logger('dispatch job events', job.filename);
     if (job.success) {
       this.emit('job:success', job);
     } else {
