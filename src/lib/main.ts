@@ -10,23 +10,24 @@ import * as path from 'path';
 const debug = require('debug')('kiwi');
 
 /**
- * autostart: run queue just after constructor call. (default: false)
- * directory: path of directory where kiwi will create folders
- * delayBetweenJobs: min delay before run next job (setTimeout, default: 0)
- * deleteJobOnFail: delete job file when fail, otherwise move to fail folder (default: true)
- * deleteJobOnSuccess: delete job file when success, otherwise move to success folder (default: true)
- * restore: reload queue from file system on start up. Clear queue if false (default: true).
- * retries: max fail retries. 0 = infinite retry. False = no retry. (default: 3)
- * jsonSpacing: stringify indent. (default: 2)
+ * Type of Kiwi constructor options.
  */
 export interface IOption {
+  /** run queue just after constructor call. (default: false) */
   autostart: boolean;
+  /** path of directory where kiwi will create folders */
   directory: string;
+  /** min delay before run next job (setTimeout, default: 0) */
   delayBetweenJobs: number;
+  /** delete job file when fail, otherwise move to fail folder (default: true) */
   deleteJobOnFail: boolean;
+  /** delete job file when success, otherwise move to success folder (default: true) */
   deleteJobOnSuccess: boolean;
+  /** reload queue from file system on start up. Clear queue if false (default: true) */
   restore: boolean;
+  /** max fail retries. 0 = infinite retry. False = no retry. (default: 3) */
   retries: boolean | number;
+  /** stringify indent. (default: 2) */
   jsonSpacing: number;
 }
 
@@ -46,6 +47,23 @@ export type WorkerFunction = (job: IJob) => any | Promise<any>;
 
 const DIR_NAMES: ReadonlyArray<any> = ['current', 'idle', 'success', 'fail'];
 
+/**
+* Example :
+* @example
+* ```typescript
+* let counter = 0;
+*
+* const queue = new Kiwi(job => {
+*   counter++;
+* });
+*
+* await queue.clear(); //clean previous jobs
+* await queue.add('foo'); //add job with 'foo' as data
+* queue.start();
+* await queue.idle(); //await queue is empty
+* console.log(await queue.isEmpty()); //check is empty
+* ```
+*/
 export class Kiwi extends EventEmitter {
   protected static fileId = 0;
   protected static runJobMutex = new Mutex();
@@ -70,6 +88,10 @@ export class Kiwi extends EventEmitter {
   protected failPath: string;
   protected paths: string[];
 
+  /**
+   * @param worker Async function invoked by kiwi on each job. Should throw an exception if job failed.
+   * @param options Configure kiwi queue
+   */
   constructor(protected worker: WorkerFunction, options?: Partial<IOption>) {
     super();
     Object.assign(this.options, options);
@@ -165,8 +187,8 @@ export class Kiwi extends EventEmitter {
       filename = path.join(
         this.idlePath,
         moment().format('YYYY-MM-DD-HH-mm-ss-') +
-          numeral(Kiwi.fileId).format('00000000000000000000') +
-          '.json'
+        numeral(Kiwi.fileId).format('00000000000000000000') +
+        '.json'
       );
       exist = await fs.pathExists(filename);
     } while (exist && i < 100);
