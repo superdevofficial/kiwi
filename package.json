@@ -1,5 +1,5 @@
 {
-  "name": "kiwi",
+  "name": "@superdev-official/kiwi",
   "version": "0.1.1",
   "description": "Queue job that using file system",
   "main": "build/main/index.js",
