@@ -1,11 +1,11 @@
+import { Mutex } from 'async-mutex';
 import empty from 'empty-folder';
 import { EventEmitter } from 'events';
 import fs from 'fs-extra';
 import mkdirp from 'mkdirp-promise';
 import moment from 'moment';
-import * as path from 'path';
-import { Mutex } from 'async-mutex';
 import numeral from 'numeral';
+import * as path from 'path';
 // tslint:disable-next-line
 const debug = require('debug')('kiwi');
 
@@ -50,6 +50,7 @@ export class Kiwi extends EventEmitter {
   protected static fileId = 0;
   protected static runJobMutex = new Mutex();
   protected static getJobMutex = new Mutex();
+  public inited: Promise<void>;
   protected options: IOption = {
     autostart: false,
     delayBetweenJobs: 0,
@@ -60,7 +61,6 @@ export class Kiwi extends EventEmitter {
     restore: true,
     retries: 3
   };
-  public inited: Promise<void>;
   protected started: boolean = false;
   protected currentJob: IJob | null = null;
 
@@ -83,8 +83,9 @@ export class Kiwi extends EventEmitter {
 
     this.addListener('job:finished', this.onJobFinished.bind(this));
 
-    if (this.options.autostart)
+    if (this.options.autostart) {
       this.start();
+    }
   }
 
   public init(): Promise<void> {
@@ -92,18 +93,6 @@ export class Kiwi extends EventEmitter {
       this.inited = this._init();
     }
     return this.inited;
-  }
-
-  protected async _init(): Promise<void> {
-    debug('start init');
-    for (const dir of this.paths) {
-      await mkdirp(dir);
-    }
-    if (this.options.restore)
-      await this.restoreCurrentFileIntoIdleDirectory();
-    else
-      await this._clear();
-    debug('end init');
   }
 
   public async start(): Promise<void> {
@@ -119,13 +108,6 @@ export class Kiwi extends EventEmitter {
   public async clear(): Promise<void> {
     await this.init();
     return this._clear();
-  }
-
-  protected async _clear(): Promise<void> {
-    for (const dir of this.paths) {
-      debug('remove folder ' + dir);
-      await this.empty(dir);
-    }
   }
 
   public async idle(): Promise<void> {
@@ -144,13 +126,33 @@ export class Kiwi extends EventEmitter {
     }
   }
 
-  public async isEmpty() {
+  public async isEmpty(): Promise<boolean> {
     return (await this.countIdleJobs()) === 0;
   }
 
   public async countIdleJobs(): Promise<number> {
     const files = await this.getFilesInIdleDirectory();
-    return files && files.length || 0;
+    return (files && files.length) || 0;
+  }
+
+  protected async _init(): Promise<void> {
+    debug('start init');
+    for (const dir of this.paths) {
+      await mkdirp(dir);
+    }
+    if (this.options.restore) {
+      await this.restoreCurrentFileIntoIdleDirectory();
+    } else {
+      await this._clear();
+    }
+    debug('end init');
+  }
+
+  protected async _clear(): Promise<void> {
+    for (const dir of this.paths) {
+      debug('remove folder ' + dir);
+      await this.empty(dir);
+    }
   }
 
   protected async getUniqueFilename(): Promise<string> {
@@ -162,7 +164,9 @@ export class Kiwi extends EventEmitter {
       Kiwi.fileId++;
       filename = path.join(
         this.idlePath,
-        moment().format('YYYY-MM-DD-HH-mm-ss-') + numeral(Kiwi.fileId).format('00000000000000000000') + '.json'
+        moment().format('YYYY-MM-DD-HH-mm-ss-') +
+          numeral(Kiwi.fileId).format('00000000000000000000') +
+          '.json'
       );
       exist = await fs.pathExists(filename);
     } while (exist && i < 100);
@@ -196,8 +200,9 @@ export class Kiwi extends EventEmitter {
     } else {
       debug('Run next job invoked but job alreay running');
     }
-    if (releaseGetJob)
+    if (releaseGetJob) {
       releaseGetJob();
+    }
   }
 
   protected async runJob(job: IJob): Promise<void> {
@@ -219,21 +224,30 @@ export class Kiwi extends EventEmitter {
         job.success = false;
         job.tryCount++;
       }
-    } while (!job.success && (this.options.retries < 0 || job.tryCount <= this.options.retries));
+    } while (
+      !job.success &&
+      (this.options.retries < 0 || job.tryCount <= this.options.retries)
+    );
 
     await this.cleanJobFile(job);
 
     debug('dispatch job events', job.filename);
-    if (job.success)
+    if (job.success) {
       this.emit('job:success', job);
-    else
+    } else {
       this.emit('job:fail', job);
+    }
     this.emit('job:finished', job);
   }
 
   protected async cleanJobFile(job: IJob): Promise<void> {
-    let destPath = path.join(job.success ? this.successPath : this.failPath, job.filename);
-    let remove = job.success ? this.options.deleteJobOnSuccess : this.options.deleteJobOnFail;
+    const destPath = path.join(
+      job.success ? this.successPath : this.failPath,
+      job.filename
+    );
+    const remove = job.success
+      ? this.options.deleteJobOnSuccess
+      : this.options.deleteJobOnFail;
     if (remove) {
       await fs.remove(job.filepath);
       job.filepath = null;
@@ -271,26 +285,26 @@ export class Kiwi extends EventEmitter {
     return files && files.length > 0 && path.join(this.idlePath, files[0]);
   }
 
-  protected async getFilesInCurrentDirectory() {
+  protected async getFilesInCurrentDirectory(): Promise<string[] | false> {
     return this.getFilesInDirectory(this.currentPath);
   }
 
-  protected async getFilesInIdleDirectory() {
+  protected async getFilesInIdleDirectory(): Promise<string[] | false> {
     return this.getFilesInDirectory(this.idlePath);
   }
 
-  protected async getFilesInDirectory(dir: string) {
-    let files = await fs.readdir(dir);
+  protected async getFilesInDirectory(dir: string): Promise<string[] | false> {
+    const files = await fs.readdir(dir);
     if (files.length === 0) {
       return false;
     }
     return files.filter(x => x.endsWith('.json')).sort();
   }
 
-  protected async restoreCurrentFileIntoIdleDirectory() {
-    let files = await this.getFilesInCurrentDirectory();
+  protected async restoreCurrentFileIntoIdleDirectory(): Promise<void> {
+    const files = await this.getFilesInCurrentDirectory();
     if (files && files.length > 0) {
-      for (let file of files) {
+      for (const file of files) {
         await fs.move(
           path.join(this.currentPath, file),
           path.join(this.idlePath, file),
@@ -302,7 +316,7 @@ export class Kiwi extends EventEmitter {
 
   protected empty(folderPath: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      empty(folderPath, false, ({ error/*,failed,removed*/ }) => {
+      empty(folderPath, false, ({ error /*,failed,removed*/ }) => {
         if (error) {
           reject(error);
         } else {
