@@ -32,8 +32,9 @@ export interface IOption {
   deleteJobOnFail: boolean;
   /** delete job file when success, otherwise move to success folder (default: true) */
   deleteJobOnSuccess: boolean;
-  /** reload queue from file system on start up. Clear queue if false (default: true) */
+  /** Allow to pass your own log function or a logger like winston. (default use debug module) */
   logger?: LogFunction | ILogger;
+  /** reload queue from file system on start up. Clear queue if false (default: true) */
   restore: boolean;
   /** max fail retries. 0 = infinite retry. False = no retry. (default: 3) */
   retries: boolean | number;
@@ -197,8 +198,8 @@ export class Kiwi extends EventEmitter {
       filename = path.join(
         this.idlePath,
         moment().format('YYYY-MM-DD-HH-mm-ss-') +
-          numeral(Kiwi.fileId).format('00000000000000000000') +
-          '.json'
+        numeral(Kiwi.fileId).format('00000000000000000000') +
+        '.json'
       );
       exist = await fs.pathExists(filename);
     } while (exist && i < 100);
