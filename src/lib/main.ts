@@ -361,13 +361,14 @@ export class Kiwi extends EventEmitter {
   }
 
   protected log(level: keyof ILogger, message: string, ...data: any[]): void {
-    let logger = debug;
+    let logger: any;
     if (this.options.logger) {
       logger =
         typeof this.options.logger === 'function'
           ? this.options.logger
           : this.options.logger[level];
     }
+    logger = logger || debug || (() => { /** noop */ });
     logger(message, data);
   }
 }
