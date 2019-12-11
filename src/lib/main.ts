@@ -14,7 +14,7 @@ export type LogFunction = (message: string, ...data: any) => void;
 export interface ILogger {
   debug: LogFunction;
   info: LogFunction;
-  warn: LogFunction;
+  warning: LogFunction;
   error: LogFunction;
 }
 
@@ -226,7 +226,7 @@ export class Kiwi extends EventEmitter {
           this.currentJob = null;
         }
       } catch (e) {
-        this.log('warn', 'Error while running job', e);
+        this.log('warning', 'Error while running job', e);
       } finally {
         releaseRunJob();
       }
@@ -253,7 +253,7 @@ export class Kiwi extends EventEmitter {
         job.success = true;
         this.log('info', 'job success', job.filename, job.result);
       } catch (e) {
-        this.log('warn', 'job failed', e);
+        this.log('warning', 'job failed', e);
         job.success = false;
         job.tryCount++;
       }
@@ -360,7 +360,7 @@ export class Kiwi extends EventEmitter {
     });
   }
 
-  protected log(level: string, message: string, ...data: any[]): void {
+  protected log(level: keyof ILogger, message: string, ...data: any[]): void {
     let logger = debug;
     if (this.options.logger) {
       logger =

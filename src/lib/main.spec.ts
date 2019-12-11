@@ -160,7 +160,7 @@ test.serial('should support custom logger', async t => {
   await queue.init();
   queue = new Kiwi(
     () => {
-      /** do nothing */
+      throw 'fail';
     },
     {
       autostart: true,
@@ -173,18 +173,21 @@ test.serial('should support custom logger', async t => {
         info: () => {
           /** do nothing */
         },
-        warn: () => {
-          /** do nothing */
+        warning: () => {
+          counter++;
         },
         error: () => {
-          /** do nothing */
+          counter++;
         }
       },
-      restore: false
+      restore: false,
+      retries: 0
     }
   );
   await queue.init();
-  t.is(counter, 2);
+  queue.add('foo');
+  await queue.idle();
+  t.is(counter, 4);
 });
 
 async function countFileInFolder(dir: string): Promise<number> {
