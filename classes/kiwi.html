@@ -119,7 +119,6 @@ queue.start();
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="kiwi.html#failpath" class="tsd-kind-icon">fail<wbr>Path</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="kiwi.html#idlepath" class="tsd-kind-icon">idle<wbr>Path</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="kiwi.html#inited" class="tsd-kind-icon">inited</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="kiwi.html#logger" class="tsd-kind-icon">logger</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="kiwi.html#paths" class="tsd-kind-icon">paths</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="kiwi.html#started" class="tsd-kind-icon">started</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="kiwi.html#successpath" class="tsd-kind-icon">success<wbr>Path</a></li>
@@ -155,6 +154,7 @@ queue.start();
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="kiwi.html#isempty" class="tsd-kind-icon">is<wbr>Empty</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="kiwi.html#listenercount" class="tsd-kind-icon">listener<wbr>Count</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="kiwi.html#listeners" class="tsd-kind-icon">listeners</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="kiwi.html#log" class="tsd-kind-icon">log</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="kiwi.html#off" class="tsd-kind-icon">off</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="kiwi.html#on" class="tsd-kind-icon">on</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="kiwi.html#onjobfinished" class="tsd-kind-icon">on<wbr>Job<wbr>Finished</a></li>
@@ -194,7 +194,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L91">lib/main.ts:91</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L100">lib/main.ts:100</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -231,7 +231,7 @@ queue.start();
 					<div class="tsd-signature tsd-kind-icon">current<wbr>Job<span class="tsd-signature-symbol">:</span> <a href="../interfaces/ijob.html" class="tsd-signature-type">IJob</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L84">lib/main.ts:84</a></li>
+							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L94">lib/main.ts:94</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -241,7 +241,7 @@ queue.start();
 					<div class="tsd-signature tsd-kind-icon">current<wbr>Path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L86">lib/main.ts:86</a></li>
+							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L96">lib/main.ts:96</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -251,7 +251,7 @@ queue.start();
 					<div class="tsd-signature tsd-kind-icon">fail<wbr>Path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L89">lib/main.ts:89</a></li>
+							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L99">lib/main.ts:99</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -261,7 +261,7 @@ queue.start();
 					<div class="tsd-signature tsd-kind-icon">idle<wbr>Path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L87">lib/main.ts:87</a></li>
+							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L97">lib/main.ts:97</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -271,17 +271,7 @@ queue.start();
 					<div class="tsd-signature tsd-kind-icon">inited<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L72">lib/main.ts:72</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
-					<a name="logger" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagProtected">Protected</span> logger</h3>
-					<div class="tsd-signature tsd-kind-icon">logger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L91">lib/main.ts:91</a></li>
+							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L82">lib/main.ts:82</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -291,7 +281,7 @@ queue.start();
 					<div class="tsd-signature tsd-kind-icon">paths<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L90">lib/main.ts:90</a></li>
+							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L100">lib/main.ts:100</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -301,7 +291,7 @@ queue.start();
 					<div class="tsd-signature tsd-kind-icon">started<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L83">lib/main.ts:83</a></li>
+							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L93">lib/main.ts:93</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -311,7 +301,7 @@ queue.start();
 					<div class="tsd-signature tsd-kind-icon">success<wbr>Path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L88">lib/main.ts:88</a></li>
+							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L98">lib/main.ts:98</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -321,7 +311,7 @@ queue.start();
 					<div class="tsd-signature tsd-kind-icon">worker<span class="tsd-signature-symbol">:</span> <a href="../globals.html#workerfunction" class="tsd-signature-type">WorkerFunction</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L97">lib/main.ts:97</a></li>
+							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L106">lib/main.ts:106</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -347,7 +337,7 @@ queue.start();
 					<div class="tsd-signature tsd-kind-icon">file<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L69">lib/main.ts:69</a></li>
+							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L79">lib/main.ts:79</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -357,7 +347,7 @@ queue.start();
 					<div class="tsd-signature tsd-kind-icon">get<wbr>Job<wbr>Mutex<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Mutex</span><span class="tsd-signature-symbol"> =&nbsp;new Mutex()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L71">lib/main.ts:71</a></li>
+							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L81">lib/main.ts:81</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -367,7 +357,7 @@ queue.start();
 					<div class="tsd-signature tsd-kind-icon">run<wbr>Job<wbr>Mutex<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Mutex</span><span class="tsd-signature-symbol"> =&nbsp;new Mutex()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L70">lib/main.ts:70</a></li>
+							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L80">lib/main.ts:80</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -384,7 +374,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L177">lib/main.ts:177</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L184">lib/main.ts:184</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -401,7 +391,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L164">lib/main.ts:164</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L171">lib/main.ts:171</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -418,7 +408,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L145">lib/main.ts:145</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L152">lib/main.ts:152</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -487,7 +477,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L269">lib/main.ts:269</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L277">lib/main.ts:277</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -510,7 +500,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L134">lib/main.ts:134</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L141">lib/main.ts:141</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -527,7 +517,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L159">lib/main.ts:159</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L166">lib/main.ts:166</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -572,7 +562,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L343">lib/main.ts:343</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L351">lib/main.ts:351</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -614,7 +604,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L314">lib/main.ts:314</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L322">lib/main.ts:322</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -631,7 +621,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L322">lib/main.ts:322</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L330">lib/main.ts:330</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -654,7 +644,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L318">lib/main.ts:318</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L326">lib/main.ts:326</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -690,7 +680,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L296">lib/main.ts:296</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L304">lib/main.ts:304</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/ijob.html" class="tsd-signature-type">IJob</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -707,7 +697,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L309">lib/main.ts:309</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L317">lib/main.ts:317</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -724,7 +714,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L184">lib/main.ts:184</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L191">lib/main.ts:191</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -741,7 +731,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L139">lib/main.ts:139</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L146">lib/main.ts:146</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -758,7 +748,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L117">lib/main.ts:117</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L124">lib/main.ts:124</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -775,7 +765,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L155">lib/main.ts:155</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L162">lib/main.ts:162</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -829,6 +819,35 @@ queue.start();
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+					<a name="log" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> log</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">log<span class="tsd-signature-symbol">(</span>level<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, <span class="tsd-signature-symbol">...</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L363">lib/main.ts:363</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>level: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>message: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>data: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -934,7 +953,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L286">lib/main.ts:286</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L294">lib/main.ts:294</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -997,7 +1016,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L130">lib/main.ts:130</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L137">lib/main.ts:137</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1202,7 +1221,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L330">lib/main.ts:330</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L338">lib/main.ts:338</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1219,7 +1238,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L234">lib/main.ts:234</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L241">lib/main.ts:241</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1242,7 +1261,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L206">lib/main.ts:206</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L213">lib/main.ts:213</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1284,7 +1303,7 @@ queue.start();
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L124">lib/main.ts:124</a></li>
+									<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L131">lib/main.ts:131</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1334,7 +1353,7 @@ queue.start();
 					<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L73">lib/main.ts:73</a></li>
+							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L83">lib/main.ts:83</a></li>
 						</ul>
 					</aside>
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
@@ -1343,7 +1362,7 @@ queue.start();
 						<div class="tsd-signature tsd-kind-icon">autostart<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L74">lib/main.ts:74</a></li>
+								<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L84">lib/main.ts:84</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -1353,7 +1372,7 @@ queue.start();
 						<div class="tsd-signature tsd-kind-icon">delay<wbr>Between<wbr>Jobs<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L75">lib/main.ts:75</a></li>
+								<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L85">lib/main.ts:85</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -1363,7 +1382,7 @@ queue.start();
 						<div class="tsd-signature tsd-kind-icon">delete<wbr>Job<wbr>OnFail<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> =&nbsp;true</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L76">lib/main.ts:76</a></li>
+								<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L86">lib/main.ts:86</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -1373,7 +1392,7 @@ queue.start();
 						<div class="tsd-signature tsd-kind-icon">delete<wbr>Job<wbr>OnSuccess<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> =&nbsp;true</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L77">lib/main.ts:77</a></li>
+								<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L87">lib/main.ts:87</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -1383,7 +1402,7 @@ queue.start();
 						<div class="tsd-signature tsd-kind-icon">directory<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;./.queue&quot;</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L78">lib/main.ts:78</a></li>
+								<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L88">lib/main.ts:88</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -1393,7 +1412,7 @@ queue.start();
 						<div class="tsd-signature tsd-kind-icon">json<wbr>Spacing<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;2</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L79">lib/main.ts:79</a></li>
+								<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L89">lib/main.ts:89</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -1403,7 +1422,7 @@ queue.start();
 						<div class="tsd-signature tsd-kind-icon">restore<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> =&nbsp;true</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L80">lib/main.ts:80</a></li>
+								<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L90">lib/main.ts:90</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -1413,7 +1432,7 @@ queue.start();
 						<div class="tsd-signature tsd-kind-icon">retries<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;3</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L81">lib/main.ts:81</a></li>
+								<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L91">lib/main.ts:91</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -1452,9 +1471,6 @@ queue.start();
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="kiwi.html#inited" class="tsd-kind-icon">inited</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
-								<a href="kiwi.html#logger" class="tsd-kind-icon">logger</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
 								<a href="kiwi.html#paths" class="tsd-kind-icon">paths</a>
@@ -1546,6 +1562,9 @@ queue.start();
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 								<a href="kiwi.html#listeners" class="tsd-kind-icon">listeners</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+								<a href="kiwi.html#log" class="tsd-kind-icon">log</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 								<a href="kiwi.html#off" class="tsd-kind-icon">off</a>
 							</li>
@@ -1605,7 +1624,13 @@ queue.start();
 						<a href="../interfaces/ijob.html" class="tsd-kind-icon">IJob</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="../interfaces/ilogger.html" class="tsd-kind-icon">ILogger</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="../interfaces/ioption.html" class="tsd-kind-icon">IOption</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#logfunction" class="tsd-kind-icon">Log<wbr>Function</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="../globals.html#workerfunction" class="tsd-kind-icon">Worker<wbr>Function</a>

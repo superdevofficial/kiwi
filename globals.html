@@ -77,12 +77,14 @@
 							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-interface"><a href="interfaces/ijob.html" class="tsd-kind-icon">IJob</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ilogger.html" class="tsd-kind-icon">ILogger</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/ioption.html" class="tsd-kind-icon">IOption</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias"><a href="globals.html#logfunction" class="tsd-kind-icon">Log<wbr>Function</a></li>
 								<li class="tsd-kind-type-alias"><a href="globals.html#workerfunction" class="tsd-kind-icon">Worker<wbr>Function</a></li>
 							</ul>
 						</section>
@@ -99,12 +101,46 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Type aliases</h2>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="logfunction" class="tsd-anchor"></a>
+					<h3>Log<wbr>Function</h3>
+					<div class="tsd-signature tsd-kind-icon">Log<wbr>Function<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L12">lib/main.ts:12</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias tsd-is-not-exported">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, <span class="tsd-signature-symbol">...</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>message: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>data: <span class="tsd-signature-type">any</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
 					<a name="workerfunction" class="tsd-anchor"></a>
 					<h3>Worker<wbr>Function</h3>
 					<div class="tsd-signature tsd-kind-icon">Worker<wbr>Function<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L47">lib/main.ts:47</a></li>
+							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L57">lib/main.ts:57</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -141,7 +177,7 @@
 					<div class="tsd-signature tsd-kind-icon">DIR_<wbr>NAMES<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ReadonlyArray</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;[&#x27;current&#x27;, &#x27;idle&#x27;, &#x27;success&#x27;, &#x27;fail&#x27;]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L49">lib/main.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L59">lib/main.ts:59</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -151,7 +187,7 @@
 					<div class="tsd-signature tsd-kind-icon">debug<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;require(&#x27;debug&#x27;)(&#x27;kiwi&#x27;)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/f88a13d/src/lib/main.ts#L10">lib/main.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/superdevofficial/kiwi/blob/633c0e3/src/lib/main.ts#L10">lib/main.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -174,7 +210,13 @@
 						<a href="interfaces/ijob.html" class="tsd-kind-icon">IJob</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="interfaces/ilogger.html" class="tsd-kind-icon">ILogger</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/ioption.html" class="tsd-kind-icon">IOption</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#logfunction" class="tsd-kind-icon">Log<wbr>Function</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#workerfunction" class="tsd-kind-icon">Worker<wbr>Function</a>
