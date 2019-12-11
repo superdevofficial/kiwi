@@ -31,7 +31,8 @@
     "no-class": false,
     "no-mixed-interface": false,
     "no-if-statement": false,
-    "no-unnecessary-class": false
+    "no-unnecessary-class": false,
     /* end tslint-immutable rules */
+    "object-literal-sort-keys": false
   }
 }

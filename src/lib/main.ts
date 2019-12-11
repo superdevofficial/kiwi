@@ -9,6 +9,15 @@ import * as path from 'path';
 // tslint:disable-next-line
 const debug = require('debug')('kiwi');
 
+export type LogFunction = (message: string, ...data: any) => void;
+
+export interface ILogger {
+  debug: LogFunction;
+  info: LogFunction;
+  warn: LogFunction;
+  error: LogFunction;
+}
+
 /**
  * Type of Kiwi constructor options.
  */
@@ -24,7 +33,7 @@ export interface IOption {
   /** delete job file when success, otherwise move to success folder (default: true) */
   deleteJobOnSuccess: boolean;
   /** reload queue from file system on start up. Clear queue if false (default: true) */
-  logger?: (message: string, ...data: any) => void;
+  logger?: LogFunction | ILogger;
   restore: boolean;
   /** max fail retries. 0 = infinite retry. False = no retry. (default: 3) */
   retries: boolean | number;
@@ -88,7 +97,6 @@ export class Kiwi extends EventEmitter {
   protected successPath: string;
   protected failPath: string;
   protected paths: string[];
-  protected logger: any;
 
   /**
    * @param worker Async function invoked by kiwi on each job. Should throw an exception if job failed.
@@ -97,8 +105,6 @@ export class Kiwi extends EventEmitter {
   constructor(protected worker: WorkerFunction, options?: Partial<IOption>) {
     super();
     Object.assign(this.options, options);
-    this.logger =
-      typeof this.options.logger === 'function' ? this.options.logger : debug;
 
     this.paths = [];
     for (const dir of DIR_NAMES) {
@@ -162,7 +168,7 @@ export class Kiwi extends EventEmitter {
   }
 
   protected async _init(): Promise<void> {
-    this.logger('start init');
+    this.log('debug', 'start init');
     for (const dir of this.paths) {
       await mkdirp(dir);
     }
@@ -171,12 +177,12 @@ export class Kiwi extends EventEmitter {
     } else {
       await this._clear();
     }
-    this.logger('end init');
+    this.log('debug', 'end init');
   }
 
   protected async _clear(): Promise<void> {
     for (const dir of this.paths) {
-      this.logger('remove folder ' + dir);
+      this.log('info', 'remove folder ' + dir);
       await this.empty(dir);
     }
   }
@@ -199,18 +205,18 @@ export class Kiwi extends EventEmitter {
     if (exist) {
       throw new Error('Unable to find unique file name !');
     }
-    this.logger('get unique filename : ' + filename);
+    this.log('debug', 'get unique filename : ' + filename);
     return filename;
   }
 
   protected async runNextJob(): Promise<void> {
     let releaseGetJob = await Kiwi.getJobMutex.acquire();
     if (!this.currentJob && this.started) {
-      this.logger('try to run next job');
+      this.log('debug', 'try to run next job');
       const releaseRunJob = await Kiwi.runJobMutex.acquire();
       try {
         const job = await this.getNextJob();
-        this.logger('Get next job', job);
+        this.log('debug', 'Get next job', job);
         if (job) {
           this.currentJob = job;
           releaseGetJob();
@@ -219,12 +225,12 @@ export class Kiwi extends EventEmitter {
           this.currentJob = null;
         }
       } catch (e) {
-        this.logger('Error while running job', e);
+        this.log('warn', 'Error while running job', e);
       } finally {
         releaseRunJob();
       }
     } else {
-      this.logger('Run next job invoked but job alreay running');
+      this.log('debug', 'Run next job invoked but job alreay running');
     }
     if (releaseGetJob) {
       releaseGetJob();
@@ -232,7 +238,7 @@ export class Kiwi extends EventEmitter {
   }
 
   protected async runJob(job: IJob): Promise<void> {
-    this.logger('run job ', job.filename);
+    this.log('debug', 'run job ', job.filename);
 
     const newFilepath = path.join(this.currentPath, job.filename);
     await fs.move(job.filepath, newFilepath);
@@ -244,9 +250,9 @@ export class Kiwi extends EventEmitter {
       try {
         job.result = await this.worker(job);
         job.success = true;
-        this.logger('job success', job.filename, job.result);
+        this.log('info', 'job success', job.filename, job.result);
       } catch (e) {
-        this.logger('job failed', e);
+        this.log('warn', 'job failed', e);
         job.success = false;
         job.tryCount++;
       }
@@ -257,10 +263,11 @@ export class Kiwi extends EventEmitter {
 
     await this.cleanJobFile(job);
 
-    this.logger('dispatch job events', job.filename);
+    this.log('debug', 'dispatch job events', job.filename);
     if (job.success) {
       this.emit('job:success', job);
     } else {
+      this.log('error', 'job failed and exceed maximum retry', job);
       this.emit('job:fail', job);
     }
     this.emit('job:finished', job);
@@ -350,5 +357,16 @@ export class Kiwi extends EventEmitter {
         }
       });
     });
+  }
+
+  protected log(level: string, message: string, ...data: any[]): void {
+    let logger = debug;
+    if (this.options.logger) {
+      logger =
+        typeof this.options.logger === 'function'
+          ? this.options.logger
+          : this.options.logger[level];
+    }
+    logger(message, data);
   }
 }
