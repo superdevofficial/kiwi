@@ -1,6 +1,6 @@
 {
   "name": "@superdev-official/kiwi",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Queue job that using file system",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
