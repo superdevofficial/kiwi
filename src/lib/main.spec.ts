@@ -96,7 +96,10 @@ test.serial('should support long async task', async t => {
 });
 
 test.serial('should restore previous task', async t => {
-  await fs.ensureDir('.queue/current');
+  await /* TODO: JSFIX could not patch the breaking change:
+  Creating a directory with fs-extra no longer returns the path 
+  Suggested fix: The returned promise no longer includes the path of the new directory */
+  fs.ensureDir('.queue/current');
   await fs.writeJson('.queue/current/a-test-0001.json', { foo: 'bar' });
 
   const queue = new Kiwi(
